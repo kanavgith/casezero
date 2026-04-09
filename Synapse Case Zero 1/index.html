@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SYNAPSE // Intelligence Hub</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="crt-theme">
+    <div class="scanlines"></div>
+    <div id="glitch-overlay" class="glitch-overlay"></div>
+
+    <!-- Home Screen / Case Selector -->
+    <div id="home-screen" class="home-container">
+        <header class="hub-header">
+            <div class="logo-area">
+                <span class="logo-icon">◈</span>
+                <span class="logo-text">SYNAPSE_NETWORK</span>
+            </div>
+            <div class="user-info">
+                <span class="rank">RANK: SENIOR_ENCRYPTOR</span>
+                <span class="status-dot"></span>
+            </div>
+        </header>
+
+        <main class="case-grid">
+            <div class="case-card active" data-case="wilson">
+                <div class="case-number">#00-WILSON</div>
+                <div class="case-title">THE DIGITAL FINGERPRINT</div>
+                <div class="case-status">COMPLETED</div>
+                <button class="launch-btn" onclick="launchCase('wilson')">ACCESS_FILE</button>
+            </div>
+
+            <div class="case-card" data-case="kapoor">
+                <div class="case-number">#01-KAPOOR</div>
+                <div class="case-title">FATAL ERR_OR</div>
+                <div class="case-status">NEW_ASSIGNMENT</div>
+                <button class="launch-btn" onclick="launchCase('kapoor')">ACCESS_FILE</button>
+            </div>
+
+            <div class="case-card" data-case="seismic">
+                <div class="case-number">#02-SEISMIC</div>
+                <div class="case-title">THE SEISMIC ASSAULT</div>
+                <div class="case-status">NEW_ASSIGNMENT</div>
+                <button class="launch-btn" onclick="launchCase('seismic')">ACCESS_FILE</button>
+            </div>
+        </main>
+
+        <footer class="hub-footer">
+            <div class="footer-left">ENCRYPTION: AES-256_ACTIVE</div>
+            <div class="footer-right">CONNECTED_TO: SECTOR_Q</div>
+        </footer>
+    </div>
+
+    <!-- Terminal Interface (Initially Hidden) -->
+    <div id="app-container" class="app-container hidden">
+        <!-- Sidebar Toolbox -->
+        <aside class="sidebar" id="toolbox">
+            <div class="sidebar-header">DIGITAL_TOOLBOX v2.1</div>
+            <div class="sidebar-section">
+                <h3>NOTES</h3>
+                <div id="notes-content" class="notes-area">
+                    <span class="placeholder">NO DATA RECOVERED...</span>
+                </div>
+            </div>
+            <div class="sidebar-section">
+                <h3>GPS_MAP</h3>
+                <button id="map-toggle-btn" class="tool-btn">VIEW_RECON_GRID</button>
+            </div>
+            <div class="sidebar-footer">
+                <div id="case-nav-container"></div>
+                <button class="back-to-hub" onclick="exitToHub()">[ <span style="font-weight:bold;">HOME</span>_HUB
+                    ]</button>
+                <div class="status-bot">SYSTEM_HEALTH: STABLE</div>
+            </div>
+        </aside>
+
+        <!-- Main Terminal Interface -->
+        <main class="terminal">
+            <header class="terminal-header">
+                <div class="header-left">
+                    <span class="blink">●</span> <span id="current-case-id">CASE_FILE: #00-WILSON</span>
+                </div>
+                <div class="header-right">
+                    PRIORITY: LEVEL_1 // FORENSIC_INTern_v2
+                </div>
+            </header>
+
+            <div id="game-content" class="game-viewport">
+                <!-- Content injected here -->
+            </div>
+
+            <footer class="terminal-footer">
+                <div id="input-container" class="input-line hidden">
+                    <span class="prompt">investigator@synapse:~$</span>
+                    <input type="text" id="terminal-input" autocomplete="off" spellcheck="false"
+                        placeholder="ENTER_COMMAND...">
+                    <button id="submit-btn" class="hidden">EXECUTE</button>
+                </div>
+                <div id="action-container" class="action-line">
+                    <!-- Buttons like START/PROCEED here -->
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Modals / Overlays -->
+    <div id="map-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span>LOCAL_AREA_GPS_RECON</span>
+                <button id="close-map" class="close-btn">[X]</button>
+            </div>
+            <div class="map-visual">
+                <div class="map-grid"></div>
+                <div id="map-markers-container">
+                    <!-- Dynamic markers -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="certificate-modal" class="modal hidden">
+        <div class="certificate-wrap">
+            <div class="certificate">
+                <div class="cert-border"></div>
+                <h1>A+ INVESTIGATOR</h1>
+                <p>FORENSIC MASTERY CERTIFIED</p>
+                <div class="case-stamp">CASE CLOSED</div>
+                <div class="cert-id" id="cert-id-val">#RECOVERED</div>
+                <button onclick="exitToHub()" class="proceed-btn">EXIT_TO_HUB</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="error-toast" class="error-notification hidden">
+        ERROR: SIGNAL INTERFERENCE
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
