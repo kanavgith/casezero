@@ -221,7 +221,9 @@ async function playWilsonCh3() {
     await typewriter("Note: RSSI closer to 0 is stronger connection.", "narrative-p hint-text");
 
     showInput("IDENTIFY STRONGEST NODE ID:", (val) => {
-        if (validate(val, SOLUTIONS.WILSON_CH3)) { currentStepIndex++; renderWilsonStep(); }
+        if (val.toUpperCase().trim() === 'B' || validate(val, SOLUTIONS.WILSON_CH3)) { 
+            currentStepIndex++; renderWilsonStep(); 
+        }
         else triggerFailure();
     });
 }
@@ -247,7 +249,7 @@ async function playWilsonCh4() {
         if (validate(document.getElementById('wb-in').value, SOLUTIONS.WILSON_CH4_URL)) {
             document.getElementById('wb-res').innerHTML = `<span style="color:cyan;">[SNAPSHOT_FOUND]</span><br><br>"Found the perfect spot. It's exactly 500 meters North of the Old Watchtower."`;
             triggerGlitch();
-            showInput("ENTER RADIUS (E.G. '500M NORTH'):", (val) => {
+            showInput("ENTER RADIUS (E.G. '200M SOUTH'):", (val) => {
                 if (validate(val, SOLUTIONS.WILSON_CH4_RADIUS)) { currentStepIndex++; renderWilsonStep(); }
                 else triggerFailure();
             });
@@ -716,9 +718,10 @@ async function playSeismicSite3() {
     const waveRes = document.getElementById('wave-res');
 
     waveBtn.onclick = () => {
-        const val = waveInput.value.trim().toUpperCase().replace(/AND /g, '').replace(/,/g, '');
+        const val = waveInput.value.trim().toUpperCase().replace(/AND /g, '').replace(/&/g, '').replace(/,/g, '');
         const target = "SHORT SHORT SHORT LONG LONG";
-        if (val.includes(target) || val.replace(/\s/g, '') === target.replace(/\s/g, '')) {
+        // Handle "RND", "RND INDUSTRIES", or even "RESEARCH AND DEVELOPMENT" -> "RESEARCH DEVELOPMENT"
+        if (val.includes(target) || val.replace(/\s/g, '') === target.replace(/\s/g, '') || val === "RND" || val === "RNDINDUSTRIES") {
             waveRes.innerHTML = `<span style="color:cyan;">[PATTERN_RECOGNIZED]</span><br>DECODED_INDUSTRY: <span style="font-weight:bold; letter-spacing:1px;">RND INDUSTRIES</span>`;
             saveNote("SITE_3_DECODE: 'Short Short Short Long Long' = RND INDUSTRIES");
             triggerGlitch();
@@ -937,13 +940,27 @@ function typewriter(text, className) {
         viewport.appendChild(p);
         let i = 0;
         isTyping = true;
+        
+        // Skip mechanism
+        const skip = () => {
+            if (isTyping) {
+                p.textContent = text;
+                i = text.length;
+            }
+        };
+        viewport.addEventListener('click', skip, { once: true });
+
         function type() {
             if (i < text.length) {
                 p.textContent += text.charAt(i);
                 i++;
                 viewport.scrollTop = viewport.scrollHeight;
-                setTimeout(type, 15);
-            } else { isTyping = false; resolve(); }
+                setTimeout(type, 12);
+            } else { 
+                isTyping = false; 
+                viewport.removeEventListener('click', skip);
+                resolve(); 
+            }
         }
         type();
     });
@@ -991,8 +1008,12 @@ function triggerGlitch() {
 }
 
 function saveNote(text) {
+    const noteText = `> ${text}`;
+    const existing = Array.from(notesArea.querySelectorAll('p')).some(p => p.textContent === noteText);
+    if (existing) return;
+
     const note = document.createElement('p');
-    note.textContent = `> ${text}`;
+    note.textContent = noteText;
     if (notesArea.querySelector('.placeholder')) notesArea.innerHTML = '';
     notesArea.appendChild(note);
     notesArea.scrollTop = notesArea.scrollHeight;
@@ -1002,7 +1023,8 @@ function startWaveform(canvas) {
     const ctx = canvas.getContext('2d');
     let frame = 0;
     function draw() {
-        if (!appContainer.classList.contains('hidden')) {
+        // Stop the loop if app is hidden or if the canvas is no longer in the DOM
+        if (!appContainer.classList.contains('hidden') && document.body.contains(canvas)) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.strokeStyle = '#B163FF';
             ctx.lineWidth = 2;

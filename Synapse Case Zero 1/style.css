@@ -339,6 +339,7 @@ body {
 
 .modal-content {
     width: 700px;
+    max-width: 90vw;
     border: 1px solid var(--purple);
     background: var(--dark);
     padding: 20px;
